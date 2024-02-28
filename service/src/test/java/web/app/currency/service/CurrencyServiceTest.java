@@ -23,8 +23,6 @@ import static web.app.currency.controller.model.ExchangeRateRequest.mapToClient;
 public class CurrencyServiceTest {
     @Mock
     private CurrencyClient currencyClientTest;
-    @Mock
-    private MessageSource messageSource;
     @InjectMocks
     private CurrencyService currencyService;
 
