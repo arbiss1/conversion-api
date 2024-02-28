@@ -11,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import web.app.currency.controller.model.RateRequest;
+import web.app.currency.controller.model.ExchangeRateRequest;
 import web.app.currency.service.CurrencyService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,9 +32,9 @@ public class CurrencyControllerTest {
         @Test
         @DisplayName("Test getCurrenciesEndpointSuccess")
         public void getCurrencies() throws Exception {
-            RateRequest rateRequest = new RateRequest("EUR", "USD", 23.98);
+            ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest("EUR", "USD", 23.98);
             ObjectMapper objectMapper = new ObjectMapper();
-            String requestJson = objectMapper.writeValueAsString(rateRequest);
+            String requestJson = objectMapper.writeValueAsString(exchangeRateRequest);
             mockMvc.perform(post("/api/currency/convert")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson))
@@ -44,9 +44,9 @@ public class CurrencyControllerTest {
         @Test
         @DisplayName("Test not valid arguments")
         public void notValidArguments() throws Exception {
-            RateRequest rateRequest = new RateRequest("EUR", "USD", null);
+            ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest("EUR", "USD", null);
             ObjectMapper objectMapper = new ObjectMapper();
-            String requestJson = objectMapper.writeValueAsString(rateRequest);
+            String requestJson = objectMapper.writeValueAsString(exchangeRateRequest);
 
             //1. check amount is null
             mockMvc.perform(post("/api/currency/convert")
@@ -54,72 +54,72 @@ public class CurrencyControllerTest {
                             .content(requestJson))
                     .andExpect(status().isBadRequest());
 
-            rateRequest.setBase(null);
-            rateRequest.setTarget("USD");
-            rateRequest.setAmount(2.03);
+            exchangeRateRequest.setBase(null);
+            exchangeRateRequest.setTarget("USD");
+            exchangeRateRequest.setAmount(2.03);
             //2. check base is null
             mockMvc.perform(post("/api/currency/convert")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson))
                     .andExpect(status().isBadRequest());
 
-            rateRequest.setTarget(null);
-            rateRequest.setBase("EUR");
-            rateRequest.setAmount(2.03);
+            exchangeRateRequest.setTarget(null);
+            exchangeRateRequest.setBase("EUR");
+            exchangeRateRequest.setAmount(2.03);
             //3. check target is null
             mockMvc.perform(post("/api/currency/convert")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson))
                     .andExpect(status().isBadRequest());
 
-            rateRequest.setTarget("");
-            rateRequest.setBase("EUR");
-            rateRequest.setAmount(2.03);
+            exchangeRateRequest.setTarget("");
+            exchangeRateRequest.setBase("EUR");
+            exchangeRateRequest.setAmount(2.03);
             //4. check target is empty
             mockMvc.perform(post("/api/currency/convert")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson))
                     .andExpect(status().isBadRequest());
 
-            rateRequest.setTarget("USD");
-            rateRequest.setBase("");
-            rateRequest.setAmount(2.03);
+            exchangeRateRequest.setTarget("USD");
+            exchangeRateRequest.setBase("");
+            exchangeRateRequest.setAmount(2.03);
             //5. check base is empty
             mockMvc.perform(post("/api/currency/convert")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson))
                     .andExpect(status().isBadRequest());
 
-            rateRequest.setTarget("USD");
-            rateRequest.setBase("EUR");
-            rateRequest.setAmount(0.00);
+            exchangeRateRequest.setTarget("USD");
+            exchangeRateRequest.setBase("EUR");
+            exchangeRateRequest.setAmount(0.00);
             //6. check amount is 0
             mockMvc.perform(post("/api/currency/convert")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson))
                     .andExpect(status().isBadRequest());
 
-            rateRequest.setTarget("USD");
-            rateRequest.setBase("EUR");
-            rateRequest.setAmount(-10.00);
+            exchangeRateRequest.setTarget("USD");
+            exchangeRateRequest.setBase("EUR");
+            exchangeRateRequest.setAmount(-10.00);
             //7. check amount is negative
             mockMvc.perform(post("/api/currency/convert")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson))
                     .andExpect(status().isBadRequest());
 
-            rateRequest.setTarget("USDDD");
-            rateRequest.setBase("EUR");
-            rateRequest.setAmount(1.09);
+            exchangeRateRequest.setTarget("USDDD");
+            exchangeRateRequest.setBase("EUR");
+            exchangeRateRequest.setAmount(1.09);
             //8. check base size
             mockMvc.perform(post("/api/currency/convert")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson))
                     .andExpect(status().isBadRequest());
 
-            rateRequest.setTarget("USD");
-            rateRequest.setBase("EURRR");
-            rateRequest.setAmount(1.09);
+            exchangeRateRequest.setTarget("USD");
+            exchangeRateRequest.setBase("EURRR");
+            exchangeRateRequest.setAmount(1.09);
             //9. check target size
             mockMvc.perform(post("/api/currency/convert")
                             .contentType(MediaType.APPLICATION_JSON)

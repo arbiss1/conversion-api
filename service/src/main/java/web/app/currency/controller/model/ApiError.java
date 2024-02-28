@@ -1,4 +1,4 @@
-package web.app.currency.model;
+package web.app.currency.controller.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

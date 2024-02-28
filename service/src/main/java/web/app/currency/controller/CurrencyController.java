@@ -11,9 +11,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import web.app.currency.controller.model.RateRequest;
-import web.app.currency.controller.model.RateResponse;
-import web.app.currency.model.ApiError;
+import web.app.currency.controller.model.ExchangeRateRequest;
+import web.app.currency.controller.model.ExchangeRateResponse;
+import web.app.currency.controller.model.ApiError;
 import web.app.currency.service.CurrencyService;
 
 @RestController
@@ -29,13 +29,13 @@ public class CurrencyController {
     @PostMapping("/convert")
     @Operation(description = "Converts the provided amount from a base currency into a target currency")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "The requested currency rate and amount were successfully retrieved", content = @Content(schema = @Schema(implementation = RateResponse.class))),
+            @ApiResponse(responseCode = "200", description = "The requested currency rate and amount were successfully retrieved", content = @Content(schema = @Schema(implementation = ExchangeRateResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ApiError.class))),
             @ApiResponse(responseCode = "404", description = "Not found", content = @Content(schema = @Schema(implementation = ApiError.class))),
             @ApiResponse(responseCode = "409", description = "Conflict", content = @Content(schema = @Schema(implementation = ApiError.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ApiError.class))),
     })
-    public ResponseEntity<RateResponse> getRates(@Valid @RequestBody RateRequest rateRequest) {
-        return ResponseEntity.ok(currencyService.getRateResponse(rateRequest));
+    public ResponseEntity<ExchangeRateResponse> getRates(@Valid @RequestBody ExchangeRateRequest exchangeRateRequest) {
+        return ResponseEntity.ok(currencyService.getRateResponse(exchangeRateRequest));
     }
 }

@@ -9,7 +9,7 @@ import web.app.currency.client.model.GetExchangeRatesRequest;
 
 @Data
 @AllArgsConstructor
-public class RateRequest {
+public class ExchangeRateRequest {
     @NotNull(message = "Base is required")
     @NotEmpty(message = "Base cannot be empty")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, defaultValue = "EUR")
@@ -28,9 +28,9 @@ public class RateRequest {
     @Positive(message = "Amount should be bigger then 0 and not a negative value")
     private Double amount;
 
-    public static GetExchangeRatesRequest mapToClient(RateRequest rateRequest){
+    public static GetExchangeRatesRequest mapToClient(ExchangeRateRequest exchangeRateRequest){
         return new GetExchangeRatesRequest(
-                rateRequest.getBase()
+                exchangeRateRequest.getBase()
         );
     }
 }

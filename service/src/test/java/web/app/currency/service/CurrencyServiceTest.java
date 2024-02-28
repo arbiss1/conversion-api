@@ -11,13 +11,13 @@ import org.springframework.context.MessageSource;
 import web.app.currency.client.CurrencyClient;
 import web.app.currency.client.model.GetExchangeRatesRequest;
 import web.app.currency.client.model.GetExchangeRatesResponse;
-import web.app.currency.controller.model.RateRequest;
-import web.app.currency.controller.model.RateResponse;
+import web.app.currency.controller.model.ExchangeRateRequest;
+import web.app.currency.controller.model.ExchangeRateResponse;
 import java.util.HashMap;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static web.app.currency.controller.model.RateRequest.mapToClient;
+import static web.app.currency.controller.model.ExchangeRateRequest.mapToClient;
 
 @ExtendWith(MockitoExtension.class)
 public class CurrencyServiceTest {
@@ -31,14 +31,14 @@ public class CurrencyServiceTest {
     @Test
     @DisplayName("Should return the rates response successfully")
     void shouldReturnSuccessIfTheServerRespondsOkay() {
-        RateRequest rateRequest = new RateRequest("EUR", "USD", 23.98);
+        ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest("EUR", "USD", 23.98);
         GetExchangeRatesResponse getExchangeRatesResponse = new GetExchangeRatesResponse(new HashMap<>(), "EUR");
         getExchangeRatesResponse.getRates().put("USD", 1.04);
-        when(currencyClientTest.getCurrencyResponse(mapToClient(rateRequest))).thenReturn(getExchangeRatesResponse);
+        when(currencyClientTest.getCurrencyResponse(mapToClient(exchangeRateRequest))).thenReturn(getExchangeRatesResponse);
 
-        RateResponse response = currencyService.getRateResponse(rateRequest);
+        ExchangeRateResponse response = currencyService.getRateResponse(exchangeRateRequest);
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(response.getBase(), rateRequest.getBase());
+        Assertions.assertEquals(response.getBase(), exchangeRateRequest.getBase());
 
         verify(currencyClientTest, times(1)).getCurrencyResponse(any());
     }
@@ -46,9 +46,9 @@ public class CurrencyServiceTest {
     @Test
     @DisplayName("Test if the mapToClient method works properly")
     void testMapperToClient(){
-        RateRequest rateRequest = new RateRequest("EUR", "USD", 23.98);
-        GetExchangeRatesRequest getExchangeRatesRequest = mapToClient(rateRequest);
+        ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest("EUR", "USD", 23.98);
+        GetExchangeRatesRequest getExchangeRatesRequest = mapToClient(exchangeRateRequest);
         Assertions.assertNotNull(getExchangeRatesRequest);
-        Assertions.assertEquals(rateRequest.getBase(), getExchangeRatesRequest.getBase());
+        Assertions.assertEquals(exchangeRateRequest.getBase(), getExchangeRatesRequest.getBase());
     }
 }

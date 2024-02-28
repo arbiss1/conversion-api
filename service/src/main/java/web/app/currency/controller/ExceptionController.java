@@ -9,7 +9,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import web.app.currency.model.ApiError;
+import web.app.currency.controller.model.ApiError;
 import web.app.currency.exceptions.GenericClientException;
 
 import java.io.FileNotFoundException;
