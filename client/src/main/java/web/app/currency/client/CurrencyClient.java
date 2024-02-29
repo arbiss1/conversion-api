@@ -12,6 +12,8 @@ import web.app.currency.client.model.GetExchangeRatesRequest;
 import web.app.currency.client.model.GetExchangeRatesResponse;
 import web.app.currency.config.ApplicationEnv;
 import web.app.currency.exceptions.GenericClientException;
+
+import java.time.LocalDate;
 import java.util.Objects;
 
 import org.springframework.web.reactive.function.client.WebClient;
@@ -31,9 +33,13 @@ public class CurrencyClient {
        this.webClient = webClientBuilder.baseUrl(applicationEnv.getCurrencyClientBaseUrl()).build();
     }
 
-    @Cacheable(value = "exchangeRates")
-    public GetExchangeRatesResponse getCurrencyResponse(GetExchangeRatesRequest getExchangeRatesRequest) {
-        return webClient.get()
+    @Cacheable(value = "exchangeRates", key = "#date")
+    public GetExchangeRatesResponse getCurrencyResponse(LocalDate date, GetExchangeRatesRequest getExchangeRatesRequest) {
+        GetExchangeRatesResponse cachedResponse = Objects.requireNonNull(cacheManager.getCache("exchangeRates")).get(date, GetExchangeRatesResponse.class);
+        if (cachedResponse != null) {
+            return cachedResponse;
+        }
+        GetExchangeRatesResponse getExchangeRatesResponse =  webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("access_key", applicationEnv.getCurrencyClientAccessKey())
                         .queryParam("base", getExchangeRatesRequest.getBase())
@@ -47,6 +53,10 @@ public class CurrencyClient {
                 .onErrorMap(WebClientResponseException.class, ex -> {
                     throw new RuntimeException("Error occurred while fetching currency response", ex);
                 }).block();
+
+        Objects.requireNonNull(cacheManager.getCache("exchangeRates")).put(date, getExchangeRatesResponse);
+
+        return getExchangeRatesResponse;
     }
 
     @Scheduled(cron = "0 */5 * * * *")

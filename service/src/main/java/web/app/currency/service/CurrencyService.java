@@ -6,6 +6,8 @@ import web.app.currency.client.model.GetExchangeRatesResponse;
 import web.app.currency.controller.model.ExchangeRateRequest;
 import web.app.currency.controller.model.ExchangeRateResponse;
 
+import java.time.LocalDate;
+
 import static web.app.currency.controller.model.ExchangeRateRequest.mapToClient;
 
 @Service
@@ -16,7 +18,7 @@ public class CurrencyService {
     }
 
     public ExchangeRateResponse getRateResponse(ExchangeRateRequest exchangeRateRequest) {
-            GetExchangeRatesResponse getExchangeRatesResponse = currencyClient.getCurrencyResponse(mapToClient(exchangeRateRequest));
+            GetExchangeRatesResponse getExchangeRatesResponse = currencyClient.getCurrencyResponse(LocalDate.now(), mapToClient(exchangeRateRequest));
             String toCurrency = exchangeRateRequest.getTarget();
 
             Double rate = getExchangeRatesResponse.getRates().get(toCurrency);
