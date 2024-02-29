@@ -58,9 +58,4 @@ public class CurrencyClient {
 
         return getExchangeRatesResponse;
     }
-
-    @Scheduled(cron = "0 */5 * * * *")
-    public void clearCache() {
-        Objects.requireNonNull(cacheManager.getCache("exchangeRates")).clear();
-    }
 }
