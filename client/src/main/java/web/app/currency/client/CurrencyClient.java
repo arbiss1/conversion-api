@@ -5,7 +5,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import web.app.currency.client.model.ClientError;
 import web.app.currency.client.model.GetExchangeRatesRequest;
@@ -54,8 +54,13 @@ public class CurrencyClient {
                     throw new RuntimeException("Error occurred while fetching currency response", ex);
                 }).block();
 
+        clearCache(date.minusDays(1));
         Objects.requireNonNull(cacheManager.getCache("exchangeRates")).put(date, getExchangeRatesResponse);
 
         return getExchangeRatesResponse;
+    }
+
+    @CacheEvict(value = "exchangeRates", key = "#date")
+    public void clearCache(LocalDate date) {
     }
 }
