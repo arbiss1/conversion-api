@@ -13,6 +13,8 @@ import web.app.currency.client.model.GetExchangeRatesRequest;
 import web.app.currency.client.model.GetExchangeRatesResponse;
 import web.app.currency.controller.model.ExchangeRateRequest;
 import web.app.currency.controller.model.ExchangeRateResponse;
+
+import java.time.LocalDate;
 import java.util.HashMap;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -32,13 +34,13 @@ public class CurrencyServiceTest {
         ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest("EUR", "USD", 23.98);
         GetExchangeRatesResponse getExchangeRatesResponse = new GetExchangeRatesResponse(new HashMap<>(), "EUR");
         getExchangeRatesResponse.getRates().put("USD", 1.04);
-        when(currencyClientTest.getCurrencyResponse(mapToClient(exchangeRateRequest))).thenReturn(getExchangeRatesResponse);
+        when(currencyClientTest.getCurrencyResponse(LocalDate.now(), mapToClient(exchangeRateRequest))).thenReturn(getExchangeRatesResponse);
 
         ExchangeRateResponse response = currencyService.getRateResponse(exchangeRateRequest);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getBase(), exchangeRateRequest.getBase());
 
-        verify(currencyClientTest, times(1)).getCurrencyResponse(any());
+        verify(currencyClientTest, times(1)).getCurrencyResponse(any(), any());
     }
 
     @Test
