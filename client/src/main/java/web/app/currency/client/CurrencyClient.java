@@ -54,13 +54,12 @@ public class CurrencyClient {
                     throw new RuntimeException("Error occurred while fetching currency response", ex);
                 }).block();
 
-        clearCache(date.minusDays(1));
+        clearCache();
         Objects.requireNonNull(cacheManager.getCache("exchangeRates")).put(date, getExchangeRatesResponse);
 
         return getExchangeRatesResponse;
     }
 
-    @CacheEvict(value = "exchangeRates", key = "#date")
-    public void clearCache(LocalDate date) {
-    }
+    @CacheEvict(value = "exchangeRates", allEntries = true)
+    public void clearCache(){}
 }
